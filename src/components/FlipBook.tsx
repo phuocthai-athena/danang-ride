@@ -44,19 +44,16 @@ function WeChatModal({ onClose }: { onClose: () => void }) {
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(socialLinks.wechat.id);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
     } catch {
-      // Fallback
       const el = document.createElement("textarea");
       el.value = socialLinks.wechat.id;
       document.body.appendChild(el);
       el.select();
       document.execCommand("copy");
       document.body.removeChild(el);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
     }
+    setCopied(true);
+    setTimeout(() => onClose(), 800);
   };
 
   return (
@@ -139,23 +136,45 @@ function QrTapZones({
     }
   };
 
+  const baseStyle: React.CSSProperties = {
+    position: "absolute",
+    cursor: "pointer",
+    zIndex: 10,
+    borderRadius: 6,
+    overflow: "hidden",
+    background: "rgba(255,255,255,0.08)",
+    boxShadow: "0 0 8px 2px rgba(255,255,255,0.15)",
+    border: "1px solid rgba(255,255,255,0.15)",
+  };
+
+  const shimmer: React.CSSProperties = {
+    position: "absolute",
+    inset: 0,
+    background: "linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0) 100%)",
+    animation: "qr-wave 3s ease-in-out infinite",
+    pointerEvents: "none",
+  };
+
+  // Block all pointer events from reaching flipbook
+  const stopAll = (e: React.SyntheticEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+  };
+
+  const hotspotProps = (app: "wechat" | "line" | "whatsapp" | "kakaotalk") => ({
+    onClick: handleTap(app),
+    onMouseDown: stopAll,
+    onTouchStart: stopAll,
+    onPointerDown: stopAll,
+  });
+
   return (
-    <div
-      style={{
-        position: "absolute",
-        bottom: 0,
-        left: 0,
-        right: 0,
-        height: "10%",
-        display: "flex",
-        zIndex: 10,
-      }}
-    >
-      <div style={{ flex: 1, cursor: "pointer" }} onClick={handleTap("wechat")} />
-      <div style={{ flex: 1, cursor: "pointer" }} onClick={handleTap("line")} />
-      <div style={{ flex: 1, cursor: "pointer" }} onClick={handleTap("whatsapp")} />
-      <div style={{ flex: 1, cursor: "pointer" }} onClick={handleTap("kakaotalk")} />
-    </div>
+    <>
+      <div style={{ ...baseStyle, bottom: "8.5%", left: "5%", width: "12%", height: "8%" }} {...hotspotProps("wechat")}><div style={shimmer} /></div>
+      <div style={{ ...baseStyle, bottom: "8.5%", left: "19%", width: "12%", height: "8%" }} {...hotspotProps("line")}><div style={shimmer} /></div>
+      <div style={{ ...baseStyle, bottom: "8.5%", right: "22.5%", width: "12%", height: "8%" }} {...hotspotProps("whatsapp")}><div style={shimmer} /></div>
+      <div style={{ ...baseStyle, bottom: "8.5%", right: "6%", width: "12%", height: "8%" }} {...hotspotProps("kakaotalk")}><div style={shimmer} /></div>
+    </>
   );
 }
 
@@ -250,6 +269,7 @@ const FlipBookPages = memo(function FlipBookPages({
         swipeDistance={30}
         maxShadowOpacity={0.5}
         drawShadow={true}
+        showPageCorners={false}
       >
         {allPages.map((page, idx) => (
           <Page key={page.id}>

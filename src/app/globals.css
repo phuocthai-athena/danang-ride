@@ -151,3 +151,16 @@ body {
 .flip-book canvas {
   touch-action: pan-y;
 }
+
+/* QR hotspot shimmer wave effect */
+@keyframes qr-wave {
+  0% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}

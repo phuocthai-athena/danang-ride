@@ -32,5 +32,8 @@ export const socialLinks = {
   wechat: { id: "wxid_kdx5d9í9xgc12", type: "copy" as const },
   line: { url: "https://line.me/ti/p/VQZdLvK_Ve", type: "link" as const },
   whatsapp: { url: "https://wa.me/84788030997", type: "link" as const },
-  kakaotalk: { url: "kakaoplus://plusfriend/friend/@Jimmy2903", type: "link" as const },
+  kakaotalk: {
+    url: "kakaoplus://plusfriend/friend/@Jimmy2903",
+    type: "link" as const,
+  },
 };
