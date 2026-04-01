@@ -25,3 +25,12 @@ export const destinations: Destination[] = [
   { id: "dong-ba-market", image: "/images/18_dong_ba_market.png" },
   { id: "hue-cuisine", image: "/images/19_hue_cuisine.png" },
 ];
+
+// Social links mapped to QR codes on each poster image
+// Bottom row order (left to right): WeChat, LINE, WhatsApp, KakaoTalk
+export const socialLinks = {
+  wechat: { id: "wxid_kdx5d9í9xgc12", type: "copy" as const },
+  line: { url: "https://line.me/ti/p/VQZdLvK_Ve", type: "link" as const },
+  whatsapp: { url: "https://wa.me/84788030997", type: "link" as const },
+  kakaotalk: { url: "kakaoplus://plusfriend/friend/@Jimmy2903", type: "link" as const },
+};
