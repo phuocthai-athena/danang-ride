@@ -37,16 +37,39 @@ function usePreloadImages(images: string[]) {
   }, [images]);
 }
 
-// WeChat ID copy modal
-function WeChatModal({ onClose }: { onClose: () => void }) {
+// Generic copy ID modal for WeChat / KakaoTalk
+const appConfig = {
+  wechat: {
+    name: "WeChat",
+    hint: "Copy ID and search in WeChat app",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="#07C160" className="h-6 w-6">
+        <path d="M8.691 2.188C3.891 2.188 0 5.476 0 9.53c0 2.212 1.17 4.203 3.002 5.55a.59.59 0 0 1 .213.665l-.39 1.48c-.019.07-.048.141-.048.213 0 .163.13.295.29.295a.326.326 0 0 0 .167-.054l1.903-1.114a.864.864 0 0 1 .717-.098 10.16 10.16 0 0 0 2.837.403c.276 0 .543-.027.811-.05a6.577 6.577 0 0 1-.312-2.014c0-3.619 3.383-6.56 7.557-6.56.249 0 .496.013.739.033C16.434 4.727 12.875 2.188 8.691 2.188zm5.396 14.609c-3.572 0-6.468-2.493-6.468-5.568s2.896-5.568 6.468-5.568 6.468 2.493 6.468 5.568-2.896 5.568-6.468 5.568z" />
+      </svg>
+    ),
+  },
+  kakaotalk: {
+    name: "KakaoTalk",
+    hint: "Copy ID and search in KakaoTalk app",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="#3C1E1E" className="h-6 w-6">
+        <path d="M12 3C6.477 3 2 6.463 2 10.691c0 2.65 1.7 4.98 4.274 6.339-.186.69-.674 2.502-.77 2.885-.12.477.175.47.368.342.151-.1 2.414-1.632 3.39-2.296A13.2 13.2 0 0 0 12 18.382c5.523 0 10-3.463 10-7.691S17.523 3 12 3z" />
+      </svg>
+    ),
+  },
+};
+
+function CopyIdModal({ app, onClose }: { app: "wechat" | "kakaotalk"; onClose: () => void }) {
   const [copied, setCopied] = useState(false);
+  const config = appConfig[app];
+  const id = socialLinks[app].id;
 
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(socialLinks.wechat.id);
+      await navigator.clipboard.writeText(id);
     } catch {
       const el = document.createElement("textarea");
-      el.value = socialLinks.wechat.id;
+      el.value = id;
       document.body.appendChild(el);
       el.select();
       document.execCommand("copy");
@@ -67,10 +90,8 @@ function WeChatModal({ onClose }: { onClose: () => void }) {
       >
         <div className="mb-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <svg viewBox="0 0 24 24" fill="#07C160" className="h-6 w-6">
-              <path d="M8.691 2.188C3.891 2.188 0 5.476 0 9.53c0 2.212 1.17 4.203 3.002 5.55a.59.59 0 0 1 .213.665l-.39 1.48c-.019.07-.048.141-.048.213 0 .163.13.295.29.295a.326.326 0 0 0 .167-.054l1.903-1.114a.864.864 0 0 1 .717-.098 10.16 10.16 0 0 0 2.837.403c.276 0 .543-.027.811-.05a6.577 6.577 0 0 1-.312-2.014c0-3.619 3.383-6.56 7.557-6.56.249 0 .496.013.739.033C16.434 4.727 12.875 2.188 8.691 2.188zm5.396 14.609c-3.572 0-6.468-2.493-6.468-5.568s2.896-5.568 6.468-5.568 6.468 2.493 6.468 5.568-2.896 5.568-6.468 5.568z" />
-            </svg>
-            <h3 className="text-lg font-semibold text-gray-900">WeChat</h3>
+            {config.icon}
+            <h3 className="text-lg font-semibold text-gray-900">{config.name}</h3>
           </div>
           <button
             onClick={onClose}
@@ -80,13 +101,11 @@ function WeChatModal({ onClose }: { onClose: () => void }) {
           </button>
         </div>
 
-        <p className="mb-3 text-sm text-gray-500">
-          Copy WeChat ID and search in WeChat app
-        </p>
+        <p className="mb-3 text-sm text-gray-500">{config.hint}</p>
 
         <div className="flex items-center gap-2">
           <div className="flex-1 rounded-lg bg-gray-100 px-4 py-3 font-mono text-base tracking-wide text-gray-800">
-            {socialLinks.wechat.id}
+            {id}
           </div>
           <button
             onClick={handleCopy}
@@ -115,9 +134,9 @@ function WeChatModal({ onClose }: { onClose: () => void }) {
 // QR tap zones overlay — covers bottom ~10% of each destination page
 // Order: WeChat (0-25%), LINE (25-50%), WhatsApp (50-75%), KakaoTalk (75-100%)
 function QrTapZones({
-  onWeChatTap,
+  onCopyIdTap,
 }: {
-  onWeChatTap: () => void;
+  onCopyIdTap: (app: "wechat" | "kakaotalk") => void;
 }) {
   const handleTap = (app: "wechat" | "line" | "whatsapp" | "kakaotalk") => (
     e: React.MouseEvent
@@ -125,8 +144,8 @@ function QrTapZones({
     e.stopPropagation();
     e.preventDefault();
 
-    if (app === "wechat") {
-      onWeChatTap();
+    if (app === "wechat" || app === "kakaotalk") {
+      onCopyIdTap(app);
       return;
     }
 
@@ -240,13 +259,13 @@ const TimelineBar = memo(function TimelineBar({
 const FlipBookPages = memo(function FlipBookPages({
   bookRef,
   onFlip,
-  onWeChatTap,
+  onCopyIdTap,
 }: {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   bookRef: React.RefObject<any>;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onFlip: (e: any) => void;
-  onWeChatTap: () => void;
+  onCopyIdTap: (app: "wechat" | "kakaotalk") => void;
 }) {
   return (
     <div className="w-full max-w-md">
@@ -284,7 +303,7 @@ const FlipBookPages = memo(function FlipBookPages({
                 priority
               />
               {/* QR tap zones on destination pages (not cover) */}
-              {idx > 0 && <QrTapZones onWeChatTap={onWeChatTap} />}
+              {idx > 0 && <QrTapZones onCopyIdTap={onCopyIdTap} />}
             </div>
           </Page>
         ))}
@@ -298,7 +317,7 @@ export default function FlipBook() {
 
   const [barState, setBarState] = useState({ page: 0, progress: 0 });
   const [playing, setPlaying] = useState(true);
-  const [showWeChat, setShowWeChat] = useState(false);
+  const [copyModalApp, setCopyModalApp] = useState<"wechat" | "kakaotalk" | null>(null);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const bookRef = useRef<any>(null);
@@ -359,8 +378,8 @@ export default function FlipBook() {
     flipBook.flip(idx);
   };
 
-  const handleWeChatTap = useCallback(() => {
-    setShowWeChat(true);
+  const handleCopyIdTap = useCallback((app: "wechat" | "kakaotalk") => {
+    setCopyModalApp(app);
   }, []);
 
   return (
@@ -376,9 +395,9 @@ export default function FlipBook() {
       <FlipBookPages
         bookRef={bookRef}
         onFlip={onFlip}
-        onWeChatTap={handleWeChatTap}
+        onCopyIdTap={handleCopyIdTap}
       />
-      {showWeChat && <WeChatModal onClose={() => setShowWeChat(false)} />}
+      {copyModalApp && <CopyIdModal app={copyModalApp} onClose={() => setCopyModalApp(null)} />}
     </div>
   );
 }

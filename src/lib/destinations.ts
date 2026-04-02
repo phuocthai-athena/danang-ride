@@ -29,11 +29,8 @@ export const destinations: Destination[] = [
 // Social links mapped to QR codes on each poster image
 // Bottom row order (left to right): WeChat, LINE, WhatsApp, KakaoTalk
 export const socialLinks = {
-  wechat: { id: "wxid_kdx5d9í9xgc12", type: "copy" as const },
-  line: { url: "https://line.me/ti/p/VQZdLvK_Ve", type: "link" as const },
-  whatsapp: { url: "https://wa.me/84788030997", type: "link" as const },
-  kakaotalk: {
-    url: "kakaoplus://plusfriend/friend/@Jimmy2903",
-    type: "link" as const,
-  },
+  wechat: { id: "wxid_ty0ms09b5be712", type: "copy" as const },
+  line: { url: "https://line.me/ti/p/2BQNwseNL2", type: "link" as const },
+  whatsapp: { url: "https://api.whatsapp.com/send/?phone=84773306310&text&type=phone_number&app_absent=0", type: "link" as const },
+  kakaotalk: { id: "Jimmy2903", type: "copy" as const },
 };
