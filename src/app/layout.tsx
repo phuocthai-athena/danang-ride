@@ -15,16 +15,28 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL("https://travelyourway.vercel.app"),
   title: {
-    default: "Travel Your Way - Da Nang Private Car & Tour Service | Dịch vụ xe du lịch Đà Nẵng",
+    default:
+      "Travel Your Way - Da Nang Private Car & Tour Service | Dịch vụ xe du lịch Đà Nẵng",
     template: "%s | Travel Your Way",
   },
   description:
     "Private car service & tours in Da Nang, Hoi An, Hue. Airport transfers, Ba Na Hills, Marble Mountains, My Son Sanctuary. Available 24/7 with 4-7 seater vehicles. Dịch vụ xe du lịch Đà Nẵng - Hội An - Huế.",
   keywords: [
-    "Da Nang private car", "Da Nang tour", "Da Nang taxi", "Da Nang airport transfer",
-    "Hoi An tour", "Hue tour", "Ba Na Hills", "Marble Mountains", "My Son Sanctuary",
-    "Vietnam travel", "Da Nang travel service",
-    "xe du lịch Đà Nẵng", "thuê xe Đà Nẵng", "tour Đà Nẵng", "xe sân bay Đà Nẵng",
+    "Da Nang private car",
+    "Da Nang tour",
+    "Da Nang taxi",
+    "Da Nang airport transfer",
+    "Hoi An tour",
+    "Hue tour",
+    "Ba Na Hills",
+    "Marble Mountains",
+    "My Son Sanctuary",
+    "Vietnam travel",
+    "Da Nang travel service",
+    "xe du lịch Đà Nẵng",
+    "thuê xe Đà Nẵng",
+    "tour Đà Nẵng",
+    "xe sân bay Đà Nẵng",
   ],
   openGraph: {
     title: "Travel Your Way - Da Nang Private Car & Tour Service",
